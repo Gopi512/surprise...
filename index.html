@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 🎁</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  body, html { 
+    margin: 0;
+    padding: 0;
+    font-family: 'Pacifico', cursive;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    position: relative;
+  }
+
+  button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    background-color: #ff4081;
+    border: none;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    z-index: 10;
+  }
+  button:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+
+  /* Secret message overlays with transparency */
+  .secret-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: rgba(255, 249, 230, 0.8); /* slightly transparent */
+    padding: 40px 60px;
+    border-radius: 20px;
+    border: 4px solid #d4af37;
+    text-align: center;
+    z-index: 9;
+    transition: transform 1s ease, opacity 1s ease;
+    opacity: 0;
+    max-width: 90%;
+  }
+  .secret-message.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  .secret-message h1 {
+    color: #ff4081;
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  .secret-message p {
+    color: #555;
+    font-size: 1.5rem;
+  }
+
+  /* Fullscreen slideshow background */
+  .slideshow-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    transition: filter 1s ease;
+  }
+  .slideshow-bg.blur {
+    filter: blur(10px);
+  }
+  .slides {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+  }
+
+  /* Floating cute emojis */
+  .emoji {
+    position: absolute;
+    font-size: 24px;
+    pointer-events: none;
+    animation: floatUp linear forwards;
+    z-index: 11;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-50px) rotate(360deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<button id="revealBtn">Click Me for Secret Message 🎁</button>
+
+<!-- Secret Messages -->
+<div class="secret-message" id="secretMessage1">
+  <h1>🎉 Happy Birthday Amrutha <3 🎁</h1>
+  <p>Na Priyamaina Chelligaariki Puttina Roju Shubhakanshalu💖💛💜</p>
+</div>
+
+<div class="secret-message" id="secretMessage2">
+  <h1>🎈Heeee! 🎁</h1>
+  <p>eppudu arogyanga anandang navvuthu undalani korukuntu Happy Happy happy Birthday💝💫🧸🌟✨</p>
+</div>
+
+<div class="secret-message" id="secretMessage3">
+  <h1>🎁 Gift kavala! 🎉</h1>
+  <p>Niku emicchina takkuve so nenu eppudu nitho lekunna nikosam unta Chellemma 💝💫</p>
+</div>
+
+<!-- Slideshow as background -->
+<div class="slideshow-bg" id="slideshow">
+  <img src="images/Snapchat-1733815710.jpg" class="slides">
+  <img src="images/1000132419.jpg" class="slides">
+  <img src="images/2025-01-08-16-57-21-037.jpg" class="slides">
+  <img src="images/20250930_103542.jpg" class="slides">
+  <img src="images/Snapchat-1192046180.jpg" class="slides">
+</div>
+
+<script>
+  const button = document.getElementById('revealBtn');
+  const messages = [
+    document.getElementById('secretMessage1'),
+    document.getElementById('secretMessage2'),
+    document.getElementById('secretMessage3')
+  ];
+  const slideshowBg = document.getElementById('slideshow');
+  const emojis = ['💖','💛','💜','🌟','✨','🎉','🧸','🎁','🐻'];
+
+  button.addEventListener('click', () => {
+    button.style.display = 'none';
+    slideshowBg.classList.add('blur'); // blur background
+    showSlides();
+    launchEmojis();
+
+    // Show 3 messages one after another
+    let i = 0;
+    function showNextMessage() {
+      if (i > 0) messages[i-1].classList.remove('show'); // hide previous
+      if (i < messages.length) {
+        messages[i].classList.add('show');
+        i++;
+        setTimeout(showNextMessage, 3000); // next message after 3 seconds
+      }
+    }
+    showNextMessage();
+  });
+
+  // Slideshow logic
+  let slideIndex = 0;
+  function showSlides() {
+    const slides = document.getElementsByClassName("slides");
+    for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+    slideIndex++;
+    if (slideIndex > slides.length) slideIndex = 1;
+    slides[slideIndex-1].style.display = "block";
+    setTimeout(showSlides, 3000);
+  }
+
+  // Floating emojis
+  function launchEmojis() {
+    const emoji = document.createElement('div');
+    emoji.className = 'emoji';
+    emoji.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    emoji.style.left = Math.random()*window.innerWidth + 'px';
+    emoji.style.fontSize = (20 + Math.random()*40) + 'px';
+    emoji.style.animationDuration = (4 + Math.random()*4) + 's';
+    document.body.appendChild(emoji);
+    setTimeout(()=>emoji.remove(), 8000);
+    setTimeout(launchEmojis, 200);
+  }
+</script>
+
+</body>
+</html>
